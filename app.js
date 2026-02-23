@@ -9,7 +9,6 @@ getDocs
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-
 import {
 getStorage,
 ref,
@@ -17,7 +16,6 @@ uploadBytes,
 getDownloadURL
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
 
 
 const firebaseConfig = {
@@ -29,16 +27,25 @@ const firebaseConfig = {
   appId: "1:869948339462:web:e45032398665e0c8d9da87"
 };
 
-
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
-
 const storage = getStorage(app);
 
 
 
+const btn = document.querySelector("button");
+
+
+// SAVE DATA
+
 window.saveData = async function(){
+
+btn.innerText="Saving...";
+btn.disabled=true;
+
+
+try{
 
 let enteredBy =
 document.getElementById("enteredBy").value;
@@ -68,18 +75,23 @@ document.getElementById("photo").files[0];
 let photoURL="";
 
 
+/* Upload Photo Faster */
+
 if(file){
 
-let storageRef=
-ref(storage,"inspectionPhotos/"+Date.now());
+let storageRef =
+ref(storage,"inspectionPhotos/"+file.name+Date.now());
 
 await uploadBytes(storageRef,file);
 
-photoURL=
+photoURL =
 await getDownloadURL(storageRef);
 
 }
 
+
+
+/* Save Firestore */
 
 await addDoc(
 collection(db,"inspections"),
@@ -92,27 +104,57 @@ location,
 date,
 time,
 followup,
-photoURL
+photoURL,
+created:Date.now()
 
 });
 
-alert("Inspection Saved");
+alert("Inspection Saved Successfully");
+
+
+/* Clear Form */
+
+document.getElementById("enteredBy").value="";
+document.getElementById("name").value="";
+document.getElementById("designation").value="";
+document.getElementById("location").value="";
+document.getElementById("date").value="";
+document.getElementById("time").value="";
+document.getElementById("followup").value="";
+document.getElementById("photo").value="";
+
 
 loadData();
+
+}
+catch(error){
+
+alert("Error Saving Data");
+
+console.log(error);
+
+}
+
+
+btn.innerText="Submit Inspection";
+btn.disabled=false;
 
 }
 
 
 
+
+// LOAD DATA
+
 async function loadData(){
 
-let records=
+let records =
 document.getElementById("records");
 
-records.innerHTML="Loading...";
+records.innerHTML="Loading inspections...";
 
 
-let querySnapshot=
+let querySnapshot =
 await getDocs(
 collection(db,"inspections")
 );
@@ -130,61 +172,22 @@ records.innerHTML+=`
 
 <div class="recordCard">
 
-<div class="label">
-Entered By:
-</div>
+<b>Entered By:</b> ${d.enteredBy}<br>
 
-${d.enteredBy}
+<b>Name:</b> ${d.name}<br>
 
-<br><br>
+<b>Designation:</b> ${d.designation}<br>
 
-<div class="label">
-Inspector:
-</div>
+<b>Location:</b> ${d.location}<br>
 
-${d.name}
+<b>Date:</b> ${d.date}<br>
 
-<br><br>
+<b>Time:</b> ${d.time}<br>
 
-<div class="label">
-Designation:
-</div>
+<b>Follow-up:</b> ${d.followup}<br>
 
-${d.designation}
-
-<br><br>
-
-<div class="label">
-Location:
-</div>
-
-${d.location}
-
-<br><br>
-
-<div class="label">
-Date:
-</div>
-
-${d.date}
-
-<br><br>
-
-<div class="label">
-Time:
-</div>
-
-${d.time}
-
-<br><br>
-
-<div class="label">
-Follow-up:
-</div>
-
-${d.followup}
-
-<img src="${d.photoURL}">
+${d.photoURL ?
+`<img src="${d.photoURL}">` : ""}
 
 </div>
 
@@ -193,6 +196,7 @@ ${d.followup}
 });
 
 }
+
 
 
 loadData();
