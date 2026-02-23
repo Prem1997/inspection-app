@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Inspection Register</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+<h1>Inspection Monitoring System</h1>
+
+<p>Inspection Data Register</p>
+
+</header>
+
+
+
+<div class="container">
+
+<div class="card">
+
+<h2>Add Inspection</h2>
+
+<input id="enteredBy"
+placeholder="Entered By">
+
+<input id="name"
+placeholder="Inspector Name">
+
+<input id="designation"
+placeholder="Designation">
+
+<input id="location"
+placeholder="Location">
+
+<label>Date</label>
+
+<input type="date" id="date">
+
+
+<label>Time</label>
+
+<input type="time" id="time">
+
+
+<textarea id="followup"
+placeholder="Inspection Follow-up"></textarea>
+
+
+<label>Upload Photo</label>
+
+<input type="file" id="photo">
+
+
+<button onclick="saveData()">
+
+Submit Inspection
+
+</button>
+
+</div>
+
+
+
+<h2 class="recordsTitle">
+
+Inspection Records
+
+</h2>
+
+<div id="records"
+class="records"></div>
+
+
+</div>
+
+
+<script type="module" src="app.js"></script>
+
+</body>
+
+</html>
