@@ -71,6 +71,14 @@ document.getElementById("followup").value;
 let file =
 document.getElementById("photo").files[0];
 
+let compressedFile = file;
+
+if(file){
+
+compressedFile = await compressImage(file);
+
+}
+
 
 let photoURL="";
 
@@ -82,7 +90,7 @@ if(file){
 let storageRef =
 ref(storage,"inspectionPhotos/"+file.name+Date.now());
 
-await uploadBytes(storageRef,file);
+await uploadBytes(storageRef,compressedFile);
 
 photoURL =
 await getDownloadURL(storageRef);
@@ -141,7 +149,7 @@ btn.disabled=false;
 
 }
 
-// AUTO LOCATION
+// AUTO GPS LOCATION
 
 function autoLocation(){
 
@@ -151,8 +159,11 @@ navigator.geolocation.getCurrentPosition(
 
 function(position){
 
-let lat = position.coords.latitude;
-let lon = position.coords.longitude;
+let lat =
+position.coords.latitude;
+
+let lon =
+position.coords.longitude;
 
 document.getElementById("location").value =
 lat + ", " + lon;
@@ -228,6 +239,49 @@ ${d.photoURL ?
 
 }
 
+async function compressImage(file){
 
+return new Promise((resolve)=>{
+
+let img = new Image();
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+img.src = e.target.result;
+
+};
+
+img.onload = function(){
+
+let canvas = document.createElement("canvas");
+
+let maxWidth = 800;
+
+let scale = maxWidth / img.width;
+
+canvas.width = maxWidth;
+canvas.height = img.height * scale;
+
+let ctx = canvas.getContext("2d");
+
+ctx.drawImage(img,0,0,
+canvas.width,
+canvas.height);
+
+canvas.toBlob(function(blob){
+
+resolve(blob);
+
+},"image/jpeg",0.7);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}
 
 loadData();

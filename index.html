@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Inspection Register</title>
+<title>Inspection App</title>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
@@ -12,51 +12,53 @@ content="width=device-width, initial-scale=1">
 
 </head>
 
-
 <body>
 
 <header>
 
-<h1>Inspection Monitoring System</h1>
-
-<p>Inspection Data Register</p>
+Inspection Monitoring System
 
 </header>
-
 
 
 <div class="container">
 
 <div class="card">
 
-<h2>Add Inspection</h2>
+<h2>Inspection Entry</h2>
 
 <input id="enteredBy"
 placeholder="Entered By">
 
 <input id="name"
-placeholder="Inspection Name">
+placeholder="Inspector Name">
 
 <input id="designation"
 placeholder="Designation">
 
-<input id="location" placeholder="Fetching location..." readonly>
+
+<input id="location"
+placeholder="Fetching location..."
+readonly>
+
 
 <label>Date</label>
 
-<input type="date" id="date">
+<input type="date"
+id="date">
 
 
 <label>Time</label>
 
-<input type="time" id="time">
+<input type="time"
+id="time">
 
 
 <textarea id="followup"
-placeholder="Inspection Follow-up"></textarea>
+placeholder="Inspection Followup"></textarea>
 
 
-<label>Take Inspection Photo</label>
+<label>Take Photo</label>
 
 <input
 type="file"
@@ -74,15 +76,14 @@ Submit Inspection
 </div>
 
 
-
-<h2 class="recordsTitle">
-
+<h2 class="title">
 Inspection Records
-
 </h2>
 
-<div id="records"
-class="records"></div>
+
+<div id="records">
+
+</div>
 
 
 </div>
