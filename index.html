@@ -35,13 +35,12 @@ content="width=device-width, initial-scale=1">
 placeholder="Entered By">
 
 <input id="name"
-placeholder="Inspector Name">
+placeholder="Inspection Name">
 
 <input id="designation"
 placeholder="Designation">
 
-<input id="location"
-placeholder="Location">
+<input id="location" placeholder="Fetching location..." readonly>
 
 <label>Date</label>
 
@@ -57,9 +56,13 @@ placeholder="Location">
 placeholder="Inspection Follow-up"></textarea>
 
 
-<label>Upload Photo</label>
+<label>Take Inspection Photo</label>
 
-<input type="file" id="photo">
+<input
+type="file"
+id="photo"
+accept="image/*"
+capture="environment">
 
 
 <button onclick="saveData()">
