@@ -8,6 +8,8 @@ addDoc,
 getDocs,
 deleteDoc,
 doc,
+query,
+orderBy,
 updateDoc
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -148,6 +150,7 @@ time,
 followup,
 photoURL
 
+
 });
 
 editID=null;
@@ -168,6 +171,7 @@ location,
 date,
 time,
 followup,
+created: Date.now(),
 photoURL
 
 });
@@ -319,11 +323,13 @@ document.getElementById("records");
 
 records.innerHTML="Loading...";
 
-let querySnapshot=
-await getDocs(
-collection(db,"inspections")
+let q = query(
+collection(db,"inspections"),
+orderBy("created","desc")
 );
 
+let querySnapshot =
+await getDocs(q);
 
 records.innerHTML="";
 
