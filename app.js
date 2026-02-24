@@ -5,7 +5,10 @@ import {
 getFirestore,
 collection,
 addDoc,
-getDocs
+getDocs,
+deleteDoc,
+doc,
+updateDoc
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -100,6 +103,29 @@ await getDownloadURL(storageRef);
 
 
 /* Save Firestore */
+if(editID){
+
+await updateDoc(
+doc(db,"inspections",editID),
+{
+
+enteredBy,
+name,
+designation,
+location,
+date,
+time,
+followup,
+photoURL
+
+});
+
+editID=null;
+
+alert("Updated Successfully");
+
+}
+else{
 
 await addDoc(
 collection(db,"inspections"),
@@ -112,13 +138,13 @@ location,
 date,
 time,
 followup,
-photoURL,
-created:Date.now()
+photoURL
 
 });
 
-alert("Inspection Saved Successfully");
+alert("Saved Successfully");
 
+}
 
 /* Clear Form */
 
@@ -186,17 +212,14 @@ document.getElementById("location").value =
 autoLocation();
 
 
-// LOAD DATA
-
 async function loadData(){
 
-let records =
+let records=
 document.getElementById("records");
 
-records.innerHTML="Loading inspections...";
+records.innerHTML="Loading...";
 
-
-let querySnapshot =
+let querySnapshot=
 await getDocs(
 collection(db,"inspections")
 );
@@ -204,10 +227,26 @@ collection(db,"inspections")
 
 records.innerHTML="";
 
+let total=0;
+let today=0;
 
-querySnapshot.forEach(doc=>{
+let todayDate =
+new Date().toISOString().split('T')[0];
 
-let d=doc.data();
+
+querySnapshot.forEach(docSnap=>{
+
+let d=docSnap.data();
+
+let id=docSnap.id;
+
+total++;
+
+if(d.date==todayDate){
+
+today++;
+
+}
 
 
 records.innerHTML+=`
@@ -231,11 +270,30 @@ records.innerHTML+=`
 ${d.photoURL ?
 `<img src="${d.photoURL}">` : ""}
 
+<br>
+
+<button class="editBtn"
+onclick="editData('${id}')">
+
+Edit
+</button>
+
+<button class="deleteBtn"
+onclick="deleteData('${id}')">
+
+Delete
+</button>
+
 </div>
 
 `;
 
 });
+
+
+document.getElementById("totalCount").innerText=total;
+
+document.getElementById("todayCount").innerText=today;
 
 }
 
@@ -285,3 +343,57 @@ reader.readAsDataURL(file);
 }
 
 loadData();
+
+
+window.deleteData = async function(id){
+
+if(confirm("Delete this inspection?")){
+
+await deleteDoc(
+doc(db,"inspections",id)
+);
+
+loadData();
+
+}
+
+}
+
+let editID=null;
+
+
+window.editData = async function(id){
+
+editID=id;
+
+let querySnapshot=
+await getDocs(
+collection(db,"inspections")
+);
+
+
+querySnapshot.forEach(docSnap=>{
+
+if(docSnap.id==id){
+
+let d=docSnap.data();
+
+document.getElementById("enteredBy").value=d.enteredBy;
+
+document.getElementById("name").value=d.name;
+
+document.getElementById("designation").value=d.designation;
+
+document.getElementById("location").value=d.location;
+
+document.getElementById("date").value=d.date;
+
+document.getElementById("time").value=d.time;
+
+document.getElementById("followup").value=d.followup;
+
+}
+
+});
+
+}
