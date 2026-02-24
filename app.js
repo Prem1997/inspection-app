@@ -16,7 +16,8 @@ import {
 getStorage,
 ref,
 uploadBytes,
-getDownloadURL
+getDownloadURL,
+deleteObject
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
@@ -233,8 +234,8 @@ if(editID==null){
 let file =
 document.getElementById("photo").files[0];
 
-let storageRef=
-ref(storage,"photos/"+Date.now());
+let storageRef =
+ref(storage,"photos/"+Date.now()+".jpg");
 
 await uploadBytes(storageRef,file);
 
@@ -423,15 +424,62 @@ todayCount;
 
 
 
-/* DELETE */
+
+// delete Data
+
 
 window.deleteData = async function(id){
 
 if(confirm("Delete inspection?")){
 
+/* Get Record First */
+
+let querySnapshot =
+await getDocs(
+collection(db,"inspections")
+);
+
+let photoURL="";
+
+querySnapshot.forEach(docSnap=>{
+
+if(docSnap.id==id){
+
+photoURL=
+docSnap.data().photoURL;
+
+}
+
+});
+
+
+/* Delete Firestore Record */
+
 await deleteDoc(
 doc(db,"inspections",id)
 );
+
+
+/* Delete Image from Storage */
+
+if(photoURL){
+
+try{
+
+let imageRef =
+ref(storage,photoURL);
+
+await deleteObject(imageRef);
+
+}
+catch(e){
+
+console.log("Image delete error");
+
+}
+
+}
+
 
 loadData();
 
