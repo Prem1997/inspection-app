@@ -204,3 +204,63 @@ width:48%;
 border-radius:6px;
 
 }
+
+/* Add Inspection Button */
+
+#addBtn{
+
+width:100%;
+padding:14px;
+margin-bottom:20px;
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+
+
+/* Hide Form */
+
+#formSection{
+
+display:none;
+
+margin-top:20px;
+
+}
+
+
+
+/* Cancel Button */
+
+.cancelBtn{
+
+background:red;
+
+margin-top:10px;
+
+}
+
+
+
+/* Mobile Friendly */
+
+@media(max-width:600px){
+
+#addBtn{
+
+font-size:16px;
+
+padding:12px;
+
+}
+
+}

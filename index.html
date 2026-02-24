@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Inspection App</title>
+<title>Inspection Monitoring System</title>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
@@ -21,17 +21,82 @@ Inspection Monitoring System
 </header>
 
 
+
 <div class="container">
+
+
+<!-- DASHBOARD -->
+
+<h2 class="title">
+
+Dashboard Summary
+
+</h2>
+
+<div class="dashboard">
+
+<div class="box">
+
+Total Inspections
+
+<h3 id="totalCount">0</h3>
+
+</div>
+
+<div class="box">
+
+Today Inspections
+
+<h3 id="todayCount">0</h3>
+
+</div>
+
+</div>
+
+
+
+<!-- ADD INSPECTION BUTTON -->
+
+<button id="addBtn"
+onclick="openForm()">
+
++ Add Inspection
+
+</button>
+
+
+
+<!-- RECORD LIST -->
+
+<h2 class="title">
+
+Inspection Records
+
+</h2>
+
+<div id="records">
+
+</div>
+
+
+
+<!-- INSPECTION FORM (HIDDEN) -->
+
+<div id="formSection">
+
 
 <div class="card">
 
-<h2>Inspection Entry</h2>
+<h2>Add Inspection</h2>
+
 
 <input id="enteredBy"
 placeholder="Entered By">
 
+
 <input id="name"
 placeholder="Inspector Name">
+
 
 <input id="designation"
 placeholder="Designation">
@@ -40,11 +105,13 @@ placeholder="Designation">
 <label>Location</label>
 
 <input id="location"
-placeholder="Click Get Location"
 readonly>
 
+
 <button onclick="getLocation()">
-Get Current Location
+
+Get Location
+
 </button>
 
 
@@ -61,7 +128,10 @@ id="time">
 
 
 <textarea id="followup"
-placeholder="Inspection Followup"></textarea>
+placeholder="Inspection Follow-up">
+
+</textarea>
+
 
 
 <label>Take Photo</label>
@@ -73,40 +143,21 @@ accept="image/*"
 capture="environment">
 
 
+
 <button onclick="saveData()">
 
 Submit Inspection
 
 </button>
 
-</div>
 
+<button onclick="closeForm()"
+class="cancelBtn">
 
-<h2 class="title">
-Dashboard Summary
-</h2>
+Cancel
 
-<div class="dashboard">
+</button>
 
-<div class="box">
-Total Inspections
-<h3 id="totalCount">0</h3>
-</div>
-
-<div class="box">
-Today Inspections
-<h3 id="todayCount">0</h3>
-</div>
-
-</div>
-
-
-<h2 class="title">
-Inspection Records
-</h2>
-
-
-<div id="records">
 
 </div>
 
@@ -114,7 +165,13 @@ Inspection Records
 </div>
 
 
-<script type="module" src="app.js"></script>
+
+</div>
+
+
+
+<script type="module"
+src="app.js"></script>
 
 </body>
 

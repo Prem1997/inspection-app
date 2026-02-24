@@ -149,6 +149,7 @@ document.querySelector("button");
 
 btn.innerText="Saving...";
 btn.disabled=true;
+closeForm();
 
 
 /* Get Values */
@@ -547,5 +548,26 @@ resolve(blob);
 reader.readAsDataURL(file);
 
 });
+
+}
+
+
+window.openForm=function(){
+
+document.getElementById("formSection")
+.style.display="block";
+
+window.scrollTo(
+0,
+document.body.scrollHeight
+);
+
+}
+
+
+window.closeForm=function(){
+
+document.getElementById("formSection")
+.style.display="none";
 
 }
