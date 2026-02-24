@@ -166,8 +166,7 @@ document.getElementById("time").value;
 let followup =
 document.getElementById("followup").value.trim();
 
-let file =
-document.getElementById("photo").files[0];
+
 
 
 
@@ -178,6 +177,20 @@ if(!enteredBy || !name || !designation ||
 !followup){
 
 alert("Fill all fields");
+
+return;
+
+}
+
+
+/* Photo Mandatory */
+
+let file =
+document.getElementById("photo").files[0];
+
+if(!file && editID==null){
+
+alert("Please take inspection photo");
 
 return;
 
@@ -213,8 +226,12 @@ return;
 
 let photoURL="";
 
+/* Keep old photo when editing */
 
-if(file){
+if(editID==null){
+
+let file =
+document.getElementById("photo").files[0];
 
 let storageRef=
 ref(storage,"photos/"+Date.now());
@@ -225,7 +242,6 @@ photoURL=
 await getDownloadURL(storageRef);
 
 }
-
 
 
 /* SAVE OR UPDATE */
