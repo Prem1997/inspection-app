@@ -50,29 +50,24 @@ btn.disabled=true;
 
 try{
 
-let enteredBy =
-document.getElementById("enteredBy").value;
+let enteredBy = document.getElementById("enteredBy").value;
+let name = document.getElementById("name").value;
+let designation = document.getElementById("designation").value;
+let location = document.getElementById("location").value;
+let date = document.getElementById("date").value;
+let time = document.getElementById("time").value;
+let followup = document.getElementById("followup").value;
+let file = document.getElementById("photo").files[0];
 
-let name =
-document.getElementById("name").value;
+if(!enteredBy || !name || !designation ||
+!location || !date || !time ||
+!followup || !file){
 
-let designation =
-document.getElementById("designation").value;
+alert("Fill all fields");
 
-let location =
-document.getElementById("location").value;
+return;
 
-let date =
-document.getElementById("date").value;
-
-let time =
-document.getElementById("time").value;
-
-let followup =
-document.getElementById("followup").value;
-
-let file =
-document.getElementById("photo").files[0];
+}
 
 let compressedFile = file;
 
@@ -186,21 +181,27 @@ navigator.geolocation.getCurrentPosition(
 function(position){
 
 let lat =
-position.coords.latitude;
+position.coords.latitude.toFixed(5);
 
 let lon =
-position.coords.longitude;
+position.coords.longitude.toFixed(5);
 
 document.getElementById("location").value =
-lat + ", " + lon;
+lat + "," + lon;
 
 },
 
 function(){
 
 document.getElementById("location").value =
-"Location not available";
+"Location unavailable";
 
+},
+
+{
+enableHighAccuracy:false,
+timeout:5000,
+maximumAge:60000
 }
 
 );
