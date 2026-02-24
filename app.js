@@ -77,9 +77,44 @@ compressedFile = await compressImage(file);
 
 }
 
-
 let photoURL="";
 
+
+// TIME VALIDATION
+
+let selectedDate =
+document.getElementById("date").value;
+
+let selectedTime =
+document.getElementById("time").value;
+
+
+let now = new Date();
+
+let today =
+now.toISOString().split("T")[0];
+
+let currentTime =
+now.getHours()*60 +
+now.getMinutes();
+
+
+let enteredTimeParts =
+selectedTime.split(":");
+
+let enteredTime =
+parseInt(enteredTimeParts[0])*60 +
+parseInt(enteredTimeParts[1]);
+
+
+
+if(selectedDate == today && enteredTime > currentTime){
+
+alert("Time cannot be greater than current time");
+
+return;
+
+}
 
 /* Upload Photo Faster */
 
@@ -462,3 +497,36 @@ document.getElementById("followup").value=d.followup;
 });
 
 }
+
+// AUTO CURRENT DATE & TIME
+
+function setCurrentDateTime(){
+
+let now = new Date();
+
+let today =
+now.toISOString().split("T")[0];
+
+let hours =
+String(now.getHours()).padStart(2,'0');
+
+let minutes =
+String(now.getMinutes()).padStart(2,'0');
+
+let currentTime =
+hours + ":" + minutes;
+
+
+document.getElementById("date").value =
+today;
+
+document.getElementById("time").value =
+currentTime;
+
+
+document.getElementById("date").max =
+today;
+
+}
+
+setCurrentDateTime();
