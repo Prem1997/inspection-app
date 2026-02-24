@@ -142,9 +142,16 @@ maximumAge:60000
 
 /* SAVE DATA */
 
-let editID=null;
-
 window.saveData = async function(){
+
+let btn =
+document.querySelector("button");
+
+btn.innerText="Saving...";
+btn.disabled=true;
+
+
+/* Get Values */
 
 let enteredBy =
 document.getElementById("enteredBy").value.trim();
@@ -167,31 +174,21 @@ document.getElementById("time").value;
 let followup =
 document.getElementById("followup").value.trim();
 
+let file =
+document.getElementById("photo").files[0];
 
 
 
-
-/* Mandatory Check */
+/* Mandatory */
 
 if(!enteredBy || !name || !designation ||
 !location || !date || !time ||
-!followup){
+!followup || !file){
 
-alert("Fill all fields");
+alert("Fill all fields and take photo");
 
-return;
-
-}
-
-
-/* Photo Mandatory */
-
-let file =
-document.getElementById("photo").files[0];
-
-if(!file && editID==null){
-
-alert("Please take inspection photo");
+btn.innerText="Submit Inspection";
+btn.disabled=false;
 
 return;
 
@@ -199,77 +196,29 @@ return;
 
 
 
-/* Time Validation */
+/* Compress Image */
 
-let now = new Date();
-
-let today =
-now.toISOString().split("T")[0];
-
-let currentMinutes =
-now.getHours()*60+now.getMinutes();
-
-let parts=time.split(":");
-
-let enteredMinutes =
-parseInt(parts[0])*60+
-parseInt(parts[1]);
-
-if(date==today && enteredMinutes>currentMinutes){
-
-alert("Time cannot be future");
-
-return;
-
-}
+let compressedFile =
+await compressImage(file);
 
 
 
-let photoURL="";
-
-/* Keep old photo when editing */
-
-if(editID==null){
-
-let file =
-document.getElementById("photo").files[0];
+/* Upload Image */
 
 let storageRef =
 ref(storage,"photos/"+Date.now()+".jpg");
 
-await uploadBytes(storageRef,file);
+await uploadBytes(
+storageRef,
+compressedFile
+);
 
-photoURL=
+let photoURL =
 await getDownloadURL(storageRef);
 
-}
 
 
-/* SAVE OR UPDATE */
-
-if(editID){
-
-await updateDoc(
-doc(db,"inspections",editID),
-{
-
-enteredBy,
-name,
-designation,
-location,
-date,
-time,
-followup,
-photoURL
-
-});
-
-alert("Updated Successfully");
-
-editID=null;
-
-}
-else{
+/* Save Firestore */
 
 await addDoc(
 collection(db,"inspections"),
@@ -287,11 +236,29 @@ created:Date.now()
 
 });
 
+
 alert("Saved Successfully");
 
-}
 
 
+/* CLEAR FORM */
+
+document.getElementById("enteredBy").value="";
+document.getElementById("name").value="";
+document.getElementById("designation").value="";
+document.getElementById("location").value="";
+document.getElementById("date").value="";
+document.getElementById("time").value="";
+document.getElementById("followup").value="";
+document.getElementById("photo").value="";
+
+
+
+btn.innerText="Submit Inspection";
+btn.disabled=false;
+
+
+/* Reload Data */
 
 loadData();
 
@@ -524,3 +491,61 @@ document.getElementById("followup").value=d.followup;
 
 
 loadData();
+
+
+async function compressImage(file){
+
+return new Promise((resolve)=>{
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+let img = new Image();
+
+img.src = e.target.result;
+
+img.onload = function(){
+
+let canvas =
+document.createElement("canvas");
+
+let maxWidth = 800;
+
+let scale =
+maxWidth / img.width;
+
+canvas.width = maxWidth;
+
+canvas.height =
+img.height * scale;
+
+let ctx =
+canvas.getContext("2d");
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+canvas.toBlob(function(blob){
+
+resolve(blob);
+
+},
+"image/jpeg",
+0.7);
+
+};
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}
