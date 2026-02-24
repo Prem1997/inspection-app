@@ -172,13 +172,19 @@ btn.disabled=false;
 
 // AUTO GPS LOCATION
 
-function autoLocation(){
+// GET LOCATION WITH PLACE NAME
+
+window.getLocation = function(){
+
+document.getElementById("location").value =
+"Fetching location...";
+
 
 if(navigator.geolocation){
 
 navigator.geolocation.getCurrentPosition(
 
-function(position){
+async function(position){
 
 let lat =
 position.coords.latitude.toFixed(5);
@@ -186,32 +192,67 @@ position.coords.latitude.toFixed(5);
 let lon =
 position.coords.longitude.toFixed(5);
 
+
+/* Get Place Name */
+
+let url =
+"https://nominatim.openstreetmap.org/reverse?format=json&lat="
++ lat + "&lon=" + lon;
+
+
+try{
+
+let response = await fetch(url);
+
+let data = await response.json();
+
+let place =
+data.address.city ||
+data.address.town ||
+data.address.village ||
+data.address.state ||
+"Unknown Location";
+
+
 document.getElementById("location").value =
+
+place + " (" + lat + "," + lon + ")";
+
+
+}
+catch{
+
+document.getElementById("location").value =
+
 lat + "," + lon;
+
+}
+
 
 },
 
 function(){
 
-document.getElementById("location").value =
-"Location unavailable";
+alert("Location permission denied");
 
 },
 
 {
 enableHighAccuracy:false,
-timeout:5000,
+timeout:8000,
 maximumAge:60000
 }
 
 );
 
 }
+else{
+
+alert("GPS not supported");
 
 }
 
-autoLocation();
-
+}
 
 async function loadData(){
 
