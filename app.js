@@ -461,9 +461,14 @@ loadData();
 
 window.editData = async function(id){
 
-editID=id;
+editID = id;
 
-let querySnapshot=
+/* OPEN FORM FIRST */
+
+openForm();
+
+
+let querySnapshot =
 await getDocs(
 collection(db,"inspections")
 );
@@ -473,15 +478,29 @@ querySnapshot.forEach(docSnap=>{
 
 if(docSnap.id==id){
 
-let d=docSnap.data();
+let d = docSnap.data();
 
-document.getElementById("enteredBy").value=d.enteredBy;
-document.getElementById("name").value=d.name;
-document.getElementById("designation").value=d.designation;
-document.getElementById("location").value=d.location;
-document.getElementById("date").value=d.date;
-document.getElementById("time").value=d.time;
-document.getElementById("followup").value=d.followup;
+
+document.getElementById("enteredBy").value =
+d.enteredBy;
+
+document.getElementById("name").value =
+d.name;
+
+document.getElementById("designation").value =
+d.designation;
+
+document.getElementById("location").value =
+d.location;
+
+document.getElementById("date").value =
+d.date;
+
+document.getElementById("time").value =
+d.time;
+
+document.getElementById("followup").value =
+d.followup;
 
 }
 
