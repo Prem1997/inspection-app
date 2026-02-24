@@ -176,11 +176,21 @@ btn.disabled=false;
 
 window.getLocation = function(){
 
-document.getElementById("location").value =
-"Fetching location...";
+let locationBox =
+document.getElementById("location");
+
+locationBox.value = "Checking location...";
 
 
-if(navigator.geolocation){
+if(!navigator.geolocation){
+
+locationBox.value =
+"Location not supported";
+
+return;
+
+}
+
 
 navigator.geolocation.getCurrentPosition(
 
@@ -193,66 +203,79 @@ let lon =
 position.coords.longitude.toFixed(5);
 
 
-/* Get Place Name */
-
-let url =
-"https://nominatim.openstreetmap.org/reverse?format=json&lat="
-+ lat + "&lon=" + lon;
-
+/* Fetch Place Name */
 
 try{
 
-let response = await fetch(url);
+let response = await fetch(
+
+"https://nominatim.openstreetmap.org/reverse?format=json&lat="
++ lat + "&lon=" + lon
+
+);
 
 let data = await response.json();
 
 let place =
+
 data.address.city ||
 data.address.town ||
 data.address.village ||
 data.address.state ||
-"Unknown Location";
+"Unknown";
 
 
-document.getElementById("location").value =
+locationBox.value =
 
 place + " (" + lat + "," + lon + ")";
-
 
 }
 catch{
 
-document.getElementById("location").value =
+locationBox.value =
 
 lat + "," + lon;
 
 }
 
-
 },
 
-function(){
 
-alert("Location permission denied");
+function(error){
+
+if(error.code === 1){
+
+locationBox.value =
+"Allow location permission";
+
+}
+
+else if(error.code === 2){
+
+locationBox.value =
+"Turn ON mobile location";
+
+}
+
+else if(error.code === 3){
+
+locationBox.value =
+"Location timeout - Try again";
+
+}
 
 },
 
 {
 enableHighAccuracy:false,
-timeout:8000,
+timeout:7000,
 maximumAge:60000
 }
 
 );
 
 }
-else{
 
-alert("GPS not supported");
-
-}
-
-}
 
 async function loadData(){
 
