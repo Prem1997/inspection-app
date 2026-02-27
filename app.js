@@ -265,10 +265,18 @@ created:Date.now()
 
 alert("Saved Successfully");
 
+/* If inspection page → go back */
+
+if(window.location.pathname.includes("inspection.html")){
+
 window.location="index.html";
 
 }
+else{
 
+loadData();
+
+}
 
 
 /* CLEAR FORM */
@@ -621,4 +629,5 @@ editID = editDocID;
 
 editData(editDocID);
 
+}
 }
