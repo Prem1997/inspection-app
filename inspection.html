@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Inspection Monitoring System</title>
+<title>Add Inspection</title>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
@@ -16,87 +16,19 @@ content="width=device-width, initial-scale=1">
 
 <header>
 
-Inspection Monitoring System
+Inspection Form
 
 </header>
 
-
-
 <div class="container">
 
-
-<!-- DASHBOARD -->
-
-<h2 class="title">
-
-Dashboard Summary
-
-</h2>
-
-<div class="dashboard">
-
-<div class="box">
-
-Total Inspections
-
-<h3 id="totalCount">0</h3>
-
-</div>
-
-<div class="box">
-
-Today Inspections
-
-<h3 id="todayCount">0</h3>
-
-</div>
-
-</div>
-
-
-
-<!-- ADD INSPECTION BUTTON -->
-
-<button id="addBtn"
-onclick="window.location='inspection.html'">
-
-+ Add Inspection
-
-</button>
-
-
-
-<!-- RECORD LIST -->
-
-<h2 class="title">
-
-Inspection Records
-
-</h2>
-
-<div id="records">
-
-</div>
-
-
-
-<!-- INSPECTION FORM (HIDDEN) -->
-
-<div id="formSection">
-
-
 <div class="card">
-
-<h2>Add Inspection</h2>
-
 
 <input id="enteredBy"
 placeholder="Entered By">
 
-
 <input id="name"
 placeholder="Inspector Name">
-
 
 <input id="designation"
 placeholder="Designation">
@@ -106,7 +38,6 @@ placeholder="Designation">
 
 <input id="location"
 readonly>
-
 
 <button onclick="getLocation()">
 
@@ -133,7 +64,6 @@ placeholder="Inspection Follow-up">
 </textarea>
 
 
-
 <label>Take Photo</label>
 
 <input
@@ -143,31 +73,23 @@ accept="image/*"
 capture="environment">
 
 
-
 <button onclick="saveData()">
 
-Submit Inspection
+Save Inspection
 
 </button>
 
 
-<button onclick="closeForm()"
-class="cancelBtn">
+<button onclick="goHome()">
 
-Cancel
+Back
 
 </button>
 
 
 </div>
 
-
 </div>
-
-
-
-</div>
-
 
 
 <script type="module"

@@ -265,6 +265,8 @@ created:Date.now()
 
 alert("Saved Successfully");
 
+window.location="index.html";
+
 }
 
 
@@ -385,7 +387,7 @@ ${d.photoURL ?
 <br>
 
 <button class="editBtn"
-onclick="editData('${id}')">
+onclick="window.location='inspection.html?id=${id}'">
 Edit
 </button>
 
@@ -596,5 +598,27 @@ window.closeForm=function(){
 
 document.getElementById("formSection")
 .style.display="none";
+
+}
+
+window.goHome=function(){
+
+window.location="index.html";
+
+}
+
+/* CHECK EDIT MODE */
+
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const editDocID =
+urlParams.get("id");
+
+if(editDocID){
+
+editID = editDocID;
+
+editData(editDocID);
 
 }
