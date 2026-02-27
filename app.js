@@ -26,14 +26,12 @@ from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 // FIREBASE CONFIG
 
 const firebaseConfig = {
-
-apiKey:"YOUR API KEY",
-authDomain:"YOUR.firebaseapp.com",
-projectId:"YOUR PROJECT ID",
-storageBucket:"YOUR.appspot.com",
-messagingSenderId:"XXXX",
-appId:"XXXX"
-
+  apiKey: "AIzaSyAKi2IAVycP4Dgdf9S0cjufMw99WNf3gJQ",
+  authDomain: "inspectionmyd.firebaseapp.com",
+  projectId: "inspectionmyd",
+  storageBucket: "inspectionmyd.firebasestorage.app",
+  messagingSenderId: "869948339462",
+  appId: "1:869948339462:web:e45032398665e0c8d9da87"
 };
 
 const app = initializeApp(firebaseConfig);
