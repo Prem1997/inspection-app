@@ -21,43 +21,29 @@ Inspection Form
 </header>
 
 
-
 <div class="container">
 
 <div class="card">
 
-<h2 style="text-align:center">
+<h2 class="formTitle">
 Add / Edit Inspection
 </h2>
 
-<!-- Entered By -->
 
 <label>Entered By</label>
-
 <input id="enteredBy"
 placeholder="Entered By">
 
 
-
-<!-- Name -->
-
 <label>Inspector Name</label>
-
 <input id="name"
 placeholder="Inspector Name">
 
 
-
-<!-- Designation -->
-
 <label>Designation</label>
-
 <input id="designation"
 placeholder="Designation">
 
-
-
-<!-- Location -->
 
 <label>Location</label>
 
@@ -65,34 +51,23 @@ placeholder="Designation">
 readonly
 placeholder="Click Get Location">
 
-
-<button onclick="getLocation()">
+<button class="locationBtn"
+onclick="getLocation()">
 
 Get Location
 
 </button>
 
 
-
-<!-- Date -->
-
 <label>Date</label>
-
 <input type="date"
 id="date">
 
 
-
-<!-- Time -->
-
 <label>Time</label>
-
 <input type="time"
 id="time">
 
-
-
-<!-- Followup -->
 
 <label>Inspection Follow-up</label>
 
@@ -101,9 +76,6 @@ placeholder="Inspection details">
 
 </textarea>
 
-
-
-<!-- Photo -->
 
 <label>Take Inspection Photo</label>
 
@@ -114,26 +86,20 @@ accept="image/*"
 capture="environment">
 
 
-
-<!-- SAVE BUTTON -->
-
-<button onclick="saveData()">
+<button class="saveBtn"
+onclick="saveData()">
 
 Save Inspection
 
 </button>
 
 
-
-<!-- BACK BUTTON -->
-
-<button onclick="goHome()"
-class="cancelBtn">
+<button class="backBtn"
+onclick="goHome()">
 
 Back
 
 </button>
-
 
 
 </div>
@@ -145,6 +111,7 @@ Back
 <script type="module"
 src="app.js"></script>
 
+
 <script>
 
 function goHome(){
@@ -154,7 +121,6 @@ window.location="index.html";
 }
 
 </script>
-
 
 </body>
 

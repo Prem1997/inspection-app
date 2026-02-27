@@ -191,3 +191,108 @@ font-size:18px;
 }
 
 }
+
+/* Form Title */
+
+.formTitle{
+
+text-align:center;
+margin-bottom:15px;
+
+}
+
+
+/* Inputs Clean Layout */
+
+.card input,
+.card textarea{
+
+width:100%;
+
+padding:14px;
+
+margin-top:6px;
+margin-bottom:12px;
+
+border-radius:8px;
+border:1px solid #ccc;
+
+font-size:16px;
+
+box-sizing:border-box;
+
+}
+
+
+/* Labels */
+
+.card label{
+
+font-weight:bold;
+
+margin-top:10px;
+
+display:block;
+
+}
+
+
+/* Textarea */
+
+textarea{
+
+height:90px;
+
+}
+
+
+
+/* Location Button */
+
+.locationBtn{
+
+background:#2563eb;
+
+}
+
+
+
+/* Save Button */
+
+.saveBtn{
+
+background:#16a34a;
+
+}
+
+
+
+/* Back Button */
+
+.backBtn{
+
+background:#dc2626;
+
+}
+
+
+
+/* Buttons */
+
+.card button{
+
+width:100%;
+
+padding:14px;
+
+margin-top:10px;
+
+border:none;
+
+border-radius:8px;
+
+color:white;
+
+font-size:16px;
+
+}
