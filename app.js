@@ -1,8 +1,6 @@
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-
-let editID = null;
 import {
 getFirestore,
 collection,
@@ -10,7 +8,8 @@ addDoc,
 getDocs,
 deleteDoc,
 doc,
-updateDoc
+updateDoc,
+getDoc
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -27,25 +26,33 @@ from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 // FIREBASE CONFIG
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAKi2IAVycP4Dgdf9S0cjufMw99WNf3gJQ",
-  authDomain: "inspectionmyd.firebaseapp.com",
-  projectId: "inspectionmyd",
-  storageBucket: "inspectionmyd.firebasestorage.app",
-  messagingSenderId: "869948339462",
-  appId: "1:869948339462:web:e45032398665e0c8d9da87"
-};
 
+apiKey:"YOUR API KEY",
+authDomain:"YOUR.firebaseapp.com",
+projectId:"YOUR PROJECT ID",
+storageBucket:"YOUR.appspot.com",
+messagingSenderId:"XXXX",
+appId:"XXXX"
+
+};
 
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+let editID = null;
 
 
-/* AUTO DATE & TIME */
+
+// AUTO DATE & TIME
 
 function setCurrentDateTime(){
+
+let dateBox = document.getElementById("date");
+let timeBox = document.getElementById("time");
+
+if(!dateBox || !timeBox) return;
 
 let now = new Date();
 
@@ -58,13 +65,10 @@ String(now.getHours()).padStart(2,'0');
 let minutes =
 String(now.getMinutes()).padStart(2,'0');
 
-let currentTime =
-hours+":"+minutes;
+dateBox.value = today;
+dateBox.max = today;
 
-document.getElementById("date").value=today;
-document.getElementById("time").value=currentTime;
-
-document.getElementById("date").max=today;
+timeBox.value = hours+":"+minutes;
 
 }
 
@@ -72,7 +76,7 @@ setCurrentDateTime();
 
 
 
-/* LOCATION WITH PLACE NAME */
+// LOCATION
 
 window.getLocation = function(){
 
@@ -90,7 +94,6 @@ position.coords.latitude.toFixed(5);
 
 let lon =
 position.coords.longitude.toFixed(5);
-
 
 try{
 
@@ -112,7 +115,7 @@ data.address.state ||
 "Unknown";
 
 
-box.value=
+box.value =
 place+" ("+lat+","+lon+")";
 
 }
@@ -124,7 +127,7 @@ box.value=lat+","+lon;
 
 },
 
-function(error){
+function(){
 
 box.value="Turn ON mobile location";
 
@@ -142,56 +145,101 @@ maximumAge:60000
 
 
 
-/* SAVE DATA */
+// IMAGE COMPRESSION
+
+async function compressImage(file){
+
+return new Promise((resolve)=>{
+
+let reader = new FileReader();
+
+reader.onload=function(e){
+
+let img=new Image();
+
+img.src=e.target.result;
+
+img.onload=function(){
+
+let canvas=
+document.createElement("canvas");
+
+let maxWidth=800;
+
+let scale=maxWidth/img.width;
+
+canvas.width=maxWidth;
+
+canvas.height=img.height*scale;
+
+let ctx=
+canvas.getContext("2d");
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+canvas.toBlob(function(blob){
+
+resolve(blob);
+
+},
+"image/jpeg",
+0.7);
+
+};
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+
+
+// SAVE DATA
 
 window.saveData = async function(){
 
-let btn =
-document.querySelector("button");
-
-btn.innerText="Saving...";
-btn.disabled=true;
-closeForm();
-
-
-/* Get Values */
+try{
 
 let enteredBy =
-document.getElementById("enteredBy").value.trim();
+document.getElementById("enteredBy")?.value.trim();
 
 let name =
-document.getElementById("name").value.trim();
+document.getElementById("name")?.value.trim();
 
 let designation =
-document.getElementById("designation").value.trim();
+document.getElementById("designation")?.value.trim();
 
 let location =
-document.getElementById("location").value.trim();
+document.getElementById("location")?.value.trim();
 
 let date =
-document.getElementById("date").value;
+document.getElementById("date")?.value;
 
 let time =
-document.getElementById("time").value;
+document.getElementById("time")?.value;
 
 let followup =
-document.getElementById("followup").value.trim();
+document.getElementById("followup")?.value.trim();
 
 let file =
-document.getElementById("photo").files[0];
+document.getElementById("photo")?.files[0];
 
 
-
-/* Mandatory */
 
 if(!enteredBy || !name || !designation ||
 !location || !date || !time ||
-!followup || !file){
+!followup){
 
-alert("Fill all fields and take photo");
-
-btn.innerText="Submit Inspection";
-btn.disabled=false;
+alert("Fill all fields");
 
 return;
 
@@ -199,14 +247,23 @@ return;
 
 
 
-/* Compress Image */
+if(!file && !editID){
+
+alert("Take inspection photo");
+
+return;
+
+}
+
+
+
+let photoURL="";
+
+
+if(file){
 
 let compressedFile =
 await compressImage(file);
-
-
-
-/* Upload Image */
 
 let storageRef =
 ref(storage,"photos/"+Date.now()+".jpg");
@@ -216,12 +273,14 @@ storageRef,
 compressedFile
 );
 
-let photoURL =
+photoURL =
 await getDownloadURL(storageRef);
 
+}
 
 
-/* Save Firestore */
+
+/* UPDATE */
 
 if(editID){
 
@@ -245,6 +304,10 @@ alert("Updated Successfully");
 editID=null;
 
 }
+
+
+/* ADD */
+
 else{
 
 await addDoc(
@@ -265,56 +328,38 @@ created:Date.now()
 
 alert("Saved Successfully");
 
-/* If inspection page → go back */
+}
 
-if(window.location.pathname.includes("inspection.html")){
+
+/* RETURN HOME */
 
 window.location="index.html";
 
-}
-else{
-
-loadData();
 
 }
+catch(error){
 
+console.log(error);
 
-/* CLEAR FORM */
+alert("Save Failed");
 
-document.getElementById("enteredBy").value="";
-document.getElementById("name").value="";
-document.getElementById("designation").value="";
-document.getElementById("location").value="";
-document.getElementById("date").value="";
-document.getElementById("time").value="";
-document.getElementById("followup").value="";
-document.getElementById("photo").value="";
-
-
-
-btn.innerText="Submit Inspection";
-btn.disabled=false;
-
-
-/* Reload Data */
-
-loadData();
+}
 
 }
 
 
 
-/* LOAD DATA */
+// LOAD DATA (HOME PAGE)
 
 async function loadData(){
 
-let records=
+let records =
 document.getElementById("records");
 
-records.innerHTML="Loading...";
+if(!records) return;
 
 
-let querySnapshot=
+let querySnapshot =
 await getDocs(
 collection(db,"inspections")
 );
@@ -338,7 +383,6 @@ let id=docSnap.id;
 let createdTime=
 d.created || 0;
 
-
 total++;
 
 if(d.date==todayDate){
@@ -358,8 +402,6 @@ created:createdTime
 
 });
 
-
-/* SORT NEWEST FIRST */
 
 dataArray.sort((a,b)=>
 
@@ -381,13 +423,9 @@ records.innerHTML+=`
 
 <div class="recordCard">
 
-<b>Entered By:</b> ${d.enteredBy}<br>
 <b>Name:</b> ${d.name}<br>
-<b>Designation:</b> ${d.designation}<br>
 <b>Location:</b> ${d.location}<br>
 <b>Date:</b> ${d.date}<br>
-<b>Time:</b> ${d.time}<br>
-<b>Follow-up:</b> ${d.followup}<br>
 
 ${d.photoURL ?
 `<img src="${d.photoURL}">` : ""}
@@ -411,69 +449,55 @@ Delete
 });
 
 
-document.getElementById("totalCount").innerText=
-total;
+let totalBox =
+document.getElementById("totalCount");
 
-document.getElementById("todayCount").innerText=
-todayCount;
+let todayBox =
+document.getElementById("todayCount");
+
+
+if(totalBox)
+totalBox.innerText=total;
+
+if(todayBox)
+todayBox.innerText=todayCount;
 
 }
 
+loadData();
 
 
 
-// delete Data
-
+// DELETE DATA + IMAGE
 
 window.deleteData = async function(id){
 
 if(confirm("Delete inspection?")){
 
-/* Get Record First */
-
-let querySnapshot =
-await getDocs(
-collection(db,"inspections")
+let docSnap =
+await getDoc(
+doc(db,"inspections",id)
 );
 
-let photoURL="";
-
-querySnapshot.forEach(docSnap=>{
-
-if(docSnap.id==id){
-
-photoURL=
-docSnap.data().photoURL;
-
-}
-
-});
-
-
-/* Delete Firestore Record */
+let data =
+docSnap.data();
 
 await deleteDoc(
 doc(db,"inspections",id)
 );
 
 
-/* Delete Image from Storage */
-
-if(photoURL){
+if(data.photoURL){
 
 try{
 
-let imageRef =
-ref(storage,photoURL);
+let imageRef=
+ref(storage,data.photoURL);
 
 await deleteObject(imageRef);
 
 }
-catch(e){
-
-console.log("Image delete error");
-
-}
+catch(e){}
 
 }
 
@@ -486,148 +510,42 @@ loadData();
 
 
 
-/* EDIT */
+// EDIT MODE
 
-window.editData = async function(id){
+async function loadEditData(id){
 
-editID = id;
-
-/* Open Form */
-
-openForm();
-
-/* Get Record */
-
-let docRef =
-doc(db,"inspections",id);
-
-let querySnapshot =
-await getDocs(
-collection(db,"inspections")
+let docSnap =
+await getDoc(
+doc(db,"inspections",id)
 );
 
-querySnapshot.forEach(docSnap=>{
+let d =
+docSnap.data();
 
-if(docSnap.id === id){
-
-let d = docSnap.data();
-
-document.getElementById("enteredBy").value = d.enteredBy;
-document.getElementById("name").value = d.name;
-document.getElementById("designation").value = d.designation;
-document.getElementById("location").value = d.location;
-document.getElementById("date").value = d.date;
-document.getElementById("time").value = d.time;
-document.getElementById("followup").value = d.followup;
-
-}
-
-});
+document.getElementById("enteredBy").value=d.enteredBy;
+document.getElementById("name").value=d.name;
+document.getElementById("designation").value=d.designation;
+document.getElementById("location").value=d.location;
+document.getElementById("date").value=d.date;
+document.getElementById("time").value=d.time;
+document.getElementById("followup").value=d.followup;
 
 }
 
 
 
-loadData();
+// CHECK EDIT PAGE
 
-
-async function compressImage(file){
-
-return new Promise((resolve)=>{
-
-let reader = new FileReader();
-
-reader.onload = function(e){
-
-let img = new Image();
-
-img.src = e.target.result;
-
-img.onload = function(){
-
-let canvas =
-document.createElement("canvas");
-
-let maxWidth = 800;
-
-let scale =
-maxWidth / img.width;
-
-canvas.width = maxWidth;
-
-canvas.height =
-img.height * scale;
-
-let ctx =
-canvas.getContext("2d");
-
-ctx.drawImage(
-img,
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-
-canvas.toBlob(function(blob){
-
-resolve(blob);
-
-},
-"image/jpeg",
-0.7);
-
-};
-
-};
-
-reader.readAsDataURL(file);
-
-});
-
-}
-
-
-window.openForm=function(){
-
-document.getElementById("formSection")
-.style.display="block";
-
-window.scrollTo(
-0,
-document.body.scrollHeight
-);
-
-}
-
-
-window.closeForm=function(){
-
-document.getElementById("formSection")
-.style.display="none";
-
-}
-
-window.goHome=function(){
-
-window.location="index.html";
-
-}
-
-/* CHECK EDIT MODE */
-
-const urlParams =
+const params =
 new URLSearchParams(window.location.search);
 
-const editDocID =
-urlParams.get("id");
+const id =
+params.get("id");
 
-if(editDocID){
+if(id){
 
-editID = editDocID;
+editID=id;
 
-editData(editDocID);
+loadEditData(id);
 
-}
 }

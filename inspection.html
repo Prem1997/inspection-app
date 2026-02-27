@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Add Inspection</title>
+<title>Inspection Form</title>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
@@ -20,24 +20,50 @@ Inspection Form
 
 </header>
 
+
+
 <div class="container">
 
 <div class="card">
 
+<h2>Add / Edit Inspection</h2>
+
+
+<!-- Entered By -->
+
+<label>Entered By</label>
+
 <input id="enteredBy"
 placeholder="Entered By">
 
+
+
+<!-- Name -->
+
+<label>Inspector Name</label>
+
 <input id="name"
 placeholder="Inspector Name">
+
+
+
+<!-- Designation -->
+
+<label>Designation</label>
 
 <input id="designation"
 placeholder="Designation">
 
 
+
+<!-- Location -->
+
 <label>Location</label>
 
 <input id="location"
-readonly>
+readonly
+placeholder="Click Get Location">
+
 
 <button onclick="getLocation()">
 
@@ -46,11 +72,17 @@ Get Location
 </button>
 
 
+
+<!-- Date -->
+
 <label>Date</label>
 
 <input type="date"
 id="date">
 
+
+
+<!-- Time -->
 
 <label>Time</label>
 
@@ -58,13 +90,21 @@ id="date">
 id="time">
 
 
+
+<!-- Followup -->
+
+<label>Inspection Follow-up</label>
+
 <textarea id="followup"
-placeholder="Inspection Follow-up">
+placeholder="Inspection details">
 
 </textarea>
 
 
-<label>Take Photo</label>
+
+<!-- Photo -->
+
+<label>Take Inspection Photo</label>
 
 <input
 type="file"
@@ -73,25 +113,47 @@ accept="image/*"
 capture="environment">
 
 
+
+<!-- SAVE BUTTON -->
+
 <button onclick="saveData()">
+
 Save Inspection
+
 </button>
 
 
-<button onclick="goHome()">
+
+<!-- BACK BUTTON -->
+
+<button onclick="goHome()"
+class="cancelBtn">
 
 Back
 
 </button>
 
 
+
 </div>
 
 </div>
+
 
 
 <script type="module"
 src="app.js"></script>
+
+<script>
+
+function goHome(){
+
+window.location="index.html";
+
+}
+
+</script>
+
 
 </body>
 
