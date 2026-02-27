@@ -416,14 +416,27 @@ dataArray.forEach(item=>{
 let d=item.data;
 let id=item.id;
 
-
 records.innerHTML+=`
 
 <div class="recordCard">
 
-<b>Name:</b> ${d.name}<br>
-<b>Location:</b> ${d.location}<br>
-<b>Date:</b> ${d.date}<br>
+<div class="recordTitle">
+
+${d.name}
+
+</div>
+
+<div class="recordText">
+📍 ${d.location}
+</div>
+
+<div class="recordText">
+📅 ${d.date} - ${d.time}
+</div>
+
+<div class="recordText">
+👤 ${d.enteredBy}
+</div>
 
 ${d.photoURL ?
 `<img src="${d.photoURL}">` : ""}
@@ -443,7 +456,6 @@ Delete
 </div>
 
 `;
-
 });
 
 

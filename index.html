@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Inspection Monitoring System</title>
+<title>Inspection Dashboard</title>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
@@ -27,12 +27,6 @@ Inspection Monitoring System
 
 <!-- DASHBOARD -->
 
-<h2 class="title">
-
-Dashboard Summary
-
-</h2>
-
 <div class="dashboard">
 
 <div class="box">
@@ -42,6 +36,7 @@ Total Inspections
 <h3 id="totalCount">0</h3>
 
 </div>
+
 
 <div class="box">
 
@@ -55,9 +50,9 @@ Today Inspections
 
 
 
-<!-- ADD INSPECTION BUTTON -->
+<!-- ADD BUTTON -->
 
-<button id="addBtn"
+<button class="addBtn"
 onclick="window.location='inspection.html'">
 
 + Add Inspection
@@ -68,99 +63,7 @@ onclick="window.location='inspection.html'">
 
 <!-- RECORD LIST -->
 
-<h2 class="title">
-
-Inspection Records
-
-</h2>
-
 <div id="records">
-
-</div>
-
-
-
-<!-- INSPECTION FORM (HIDDEN) -->
-
-<div id="formSection">
-
-
-<div class="card">
-
-<h2>Add Inspection</h2>
-
-
-<input id="enteredBy"
-placeholder="Entered By">
-
-
-<input id="name"
-placeholder="Inspector Name">
-
-
-<input id="designation"
-placeholder="Designation">
-
-
-<label>Location</label>
-
-<input id="location"
-readonly>
-
-
-<button onclick="getLocation()">
-
-Get Location
-
-</button>
-
-
-<label>Date</label>
-
-<input type="date"
-id="date">
-
-
-<label>Time</label>
-
-<input type="time"
-id="time">
-
-
-<textarea id="followup"
-placeholder="Inspection Follow-up">
-
-</textarea>
-
-
-
-<label>Take Photo</label>
-
-<input
-type="file"
-id="photo"
-accept="image/*"
-capture="environment">
-
-
-
-<button onclick="saveData()">
-
-Submit Inspection
-
-</button>
-
-
-<button onclick="closeForm()"
-class="cancelBtn">
-
-Cancel
-
-</button>
-
-
-</div>
-
 
 </div>
 
