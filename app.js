@@ -1,6 +1,8 @@
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
+
+let editID = null;
 import {
 getFirestore,
 collection,
@@ -221,6 +223,30 @@ await getDownloadURL(storageRef);
 
 /* Save Firestore */
 
+if(editID){
+
+await updateDoc(
+doc(db,"inspections",editID),
+{
+
+enteredBy,
+name,
+designation,
+location,
+date,
+time,
+followup,
+photoURL
+
+});
+
+alert("Updated Successfully");
+
+editID=null;
+
+}
+else{
+
 await addDoc(
 collection(db,"inspections"),
 {
@@ -237,8 +263,9 @@ created:Date.now()
 
 });
 
-
 alert("Saved Successfully");
+
+}
 
 
 
@@ -345,17 +372,11 @@ records.innerHTML+=`
 <div class="recordCard">
 
 <b>Entered By:</b> ${d.enteredBy}<br>
-
 <b>Name:</b> ${d.name}<br>
-
 <b>Designation:</b> ${d.designation}<br>
-
 <b>Location:</b> ${d.location}<br>
-
 <b>Date:</b> ${d.date}<br>
-
 <b>Time:</b> ${d.time}<br>
-
 <b>Follow-up:</b> ${d.followup}<br>
 
 ${d.photoURL ?
@@ -365,13 +386,11 @@ ${d.photoURL ?
 
 <button class="editBtn"
 onclick="editData('${id}')">
-
 Edit
 </button>
 
 <button class="deleteBtn"
 onclick="deleteData('${id}')">
-
 Delete
 </button>
 
@@ -463,44 +482,33 @@ window.editData = async function(id){
 
 editID = id;
 
-/* OPEN FORM FIRST */
+/* Open Form */
 
 openForm();
 
+/* Get Record */
+
+let docRef =
+doc(db,"inspections",id);
 
 let querySnapshot =
 await getDocs(
 collection(db,"inspections")
 );
 
-
 querySnapshot.forEach(docSnap=>{
 
-if(docSnap.id==id){
+if(docSnap.id === id){
 
 let d = docSnap.data();
 
-
-document.getElementById("enteredBy").value =
-d.enteredBy;
-
-document.getElementById("name").value =
-d.name;
-
-document.getElementById("designation").value =
-d.designation;
-
-document.getElementById("location").value =
-d.location;
-
-document.getElementById("date").value =
-d.date;
-
-document.getElementById("time").value =
-d.time;
-
-document.getElementById("followup").value =
-d.followup;
+document.getElementById("enteredBy").value = d.enteredBy;
+document.getElementById("name").value = d.name;
+document.getElementById("designation").value = d.designation;
+document.getElementById("location").value = d.location;
+document.getElementById("date").value = d.date;
+document.getElementById("time").value = d.time;
+document.getElementById("followup").value = d.followup;
 
 }
 
