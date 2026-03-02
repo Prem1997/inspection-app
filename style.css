@@ -324,36 +324,74 @@ margin-top:3px;
 }
 
 /* Filter Box */
+/* Compact Filter */
 
 .filterBox{
 
 background:white;
-padding:10px;
+padding:8px;
 margin-bottom:10px;
-border-radius:10px;
+border-radius:8px;
 box-shadow:0px 2px 6px #ccc;
 
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+align-items:center;
+
 }
+
+
+/* Small Inputs */
 
 .filterBox input{
 
-width:100%;
-padding:10px;
-margin-top:5px;
-margin-bottom:5px;
+padding:6px;
+font-size:13px;
 
-border-radius:6px;
+border-radius:5px;
 border:1px solid #ccc;
+
+height:32px;
 
 }
 
+
+/* Search Box */
+
+#searchBox{
+
+flex:1;
+min-width:120px;
+
+}
+
+
+/* Date Boxes */
+
+#fromDate,
+#toDate{
+
+width:120px;
+
+}
+
+
+/* Button */
+
 .filterBox button{
+
+padding:6px 10px;
+
+font-size:13px;
+
+border:none;
 
 background:#2563eb;
 color:white;
-border:none;
-padding:10px;
-border-radius:6px;
-width:100%;
+
+border-radius:5px;
+
+height:32px;
 
 }
