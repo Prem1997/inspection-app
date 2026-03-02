@@ -358,29 +358,28 @@ document.getElementById("records");
 
 if(!records) return;
 
+records.innerHTML="Loading...";
 
 let querySnapshot =
 await getDocs(
 collection(db,"inspections")
 );
 
-
 let dataArray=[];
 
 let total=0;
 let todayCount=0;
 
-let todayDate=
+let todayDate =
 new Date().toISOString().split("T")[0];
 
 
 querySnapshot.forEach(docSnap=>{
 
 let d=docSnap.data();
-
 let id=docSnap.id;
 
-let createdTime=
+let createdTime =
 d.created || 0;
 
 total++;
@@ -390,7 +389,6 @@ if(d.date==todayDate){
 todayCount++;
 
 }
-
 
 dataArray.push({
 
@@ -404,17 +402,21 @@ created:createdTime
 
 
 dataArray.sort((a,b)=>
-
 b.created-a.created
-
 );
 
 
+records.innerHTML="";
+
+
+dataArray.forEach(item=>{
+
+let d=item.data;
+let id=item.id;
 
 records.innerHTML+=`
 
 <div class="recordCard"
-
 onclick="window.location='view.html?id=${id}'">
 
 <div class="recordName">
@@ -433,6 +435,7 @@ ${d.name}
 
 `;
 
+});
 
 
 let totalBox =
@@ -449,9 +452,6 @@ if(todayBox)
 todayBox.innerText=todayCount;
 
 }
-
-loadData();
-
 
 
 // DELETE DATA + IMAGE
