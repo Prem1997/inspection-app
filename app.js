@@ -41,6 +41,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 let editID=null;
+let displayLimit = 8;
 
 
 
@@ -307,6 +308,7 @@ new Date().toISOString().split("T")[0];
 
 
 records.innerHTML="";
+let count = 0;
 
 
 querySnapshot.forEach(docSnap=>{
@@ -340,7 +342,9 @@ if(toDate)
 matchDate=d.date<=toDate;
 
 
-if(matchSearch && matchDate){
+if(matchSearch && matchDate && count < displayLimit){
+
+count++;
 
 records.innerHTML+=`
 
@@ -525,6 +529,14 @@ window.clearFilter=function(){
 document.getElementById("searchBox").value="";
 document.getElementById("fromDate").value="";
 document.getElementById("toDate").value="";
+
+loadData();
+
+}
+
+window.loadMoreData=function(){
+
+displayLimit += 8;
 
 loadData();
 
