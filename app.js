@@ -43,6 +43,8 @@ let editID = null;
 
 
 
+
+
 // AUTO DATE & TIME
 
 function setCurrentDateTime(){
@@ -408,55 +410,29 @@ b.created-a.created
 );
 
 
-records.innerHTML="";
-
-
-dataArray.forEach(item=>{
-
-let d=item.data;
-let id=item.id;
 
 records.innerHTML+=`
 
-<div class="recordCard">
+<div class="recordCard"
 
-<div class="recordTitle">
+onclick="window.location='view.html?id=${id}'">
 
+<div class="recordName">
 ${d.name}
-
 </div>
 
-<div class="recordText">
+<div class="recordSmall">
+📅 ${d.date} ${d.time}
+</div>
+
+<div class="recordSmall">
 📍 ${d.location}
 </div>
-
-<div class="recordText">
-📅 ${d.date} - ${d.time}
-</div>
-
-<div class="recordText">
-👤 ${d.enteredBy}
-</div>
-
-${d.photoURL ?
-`<img src="${d.photoURL}">` : ""}
-
-<br>
-
-<button class="editBtn"
-onclick="window.location='inspection.html?id=${id}'">
-Edit
-</button>
-
-<button class="deleteBtn"
-onclick="deleteData('${id}')">
-Delete
-</button>
 
 </div>
 
 `;
-});
+
 
 
 let totalBox =
@@ -543,19 +519,104 @@ document.getElementById("followup").value=d.followup;
 }
 
 
-
 // CHECK EDIT PAGE
+
+
+
+
+async function loadViewData(id){
+
+let box =
+document.getElementById("viewData");
+
+if(!box) return;
+
+let docSnap =
+await getDoc(
+doc(db,"inspections",id)
+);
+
+let d =
+docSnap.data();
+
+box.innerHTML=`
+
+<h3>${d.name}</h3>
+
+<p><b>Entered By:</b> ${d.enteredBy}</p>
+
+<p><b>Designation:</b> ${d.designation}</p>
+
+<p><b>Location:</b> ${d.location}</p>
+
+<p><b>Date:</b> ${d.date}</p>
+
+<p><b>Time:</b> ${d.time}</p>
+
+<p><b>Follow-up:</b><br>
+${d.followup}</p>
+
+${d.photoURL ?
+`<img src="${d.photoURL}"
+style="width:100%;border-radius:8px">`
+:""}
+
+<br><br>
+
+<button class="editBtn"
+onclick="window.location='inspection.html?id=${id}'">
+Edit
+</button>
+
+<button class="deleteBtn"
+onclick="deleteData('${id}')">
+Delete
+</button>
+
+`;
+
+}
+
+
+
+/* CHECK VIEW PAGE */
 
 const params =
 new URLSearchParams(window.location.search);
 
-const id =
+const viewID =
 params.get("id");
 
-if(id){
+if(viewID){
 
-editID=id;
+loadViewData(viewID);
 
-loadEditData(id);
+}
+
+/* PAGE PARAMETER HANDLER */
+
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const pageID =
+urlParams.get("id");
+
+
+/* EDIT PAGE */
+
+if(pageID && document.getElementById("enteredBy")){
+
+editID = pageID;
+
+loadEditData(pageID);
+
+}
+
+
+/* VIEW PAGE */
+
+if(pageID && document.getElementById("viewData")){
+
+loadViewData(pageID);
 
 }
