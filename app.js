@@ -593,13 +593,22 @@ loadViewData(viewID);
 
 }
 
-/* PAGE PARAMETER HANDLER */
+/* PAGE HANDLER */
 
 const urlParams =
 new URLSearchParams(window.location.search);
 
 const pageID =
 urlParams.get("id");
+
+
+/* LOAD DASHBOARD */
+
+if(document.getElementById("records")){
+
+loadData();
+
+}
 
 
 /* EDIT PAGE */
