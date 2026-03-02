@@ -23,52 +23,45 @@ deleteObject
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 
-// FIREBASE CONFIG
+// FIREBASE
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAKi2IAVycP4Dgdf9S0cjufMw99WNf3gJQ",
-  authDomain: "inspectionmyd.firebaseapp.com",
-  projectId: "inspectionmyd",
-  storageBucket: "inspectionmyd.firebasestorage.app",
-  messagingSenderId: "869948339462",
-  appId: "1:869948339462:web:e45032398665e0c8d9da87"
+
+apiKey:"AIzaSyAKi2IAVycP4Dgdf9S0cjufMw99WNf3gJQ",
+authDomain:"inspectionmyd.firebaseapp.com",
+projectId:"inspectionmyd",
+storageBucket:"inspectionmyd.firebasestorage.app",
+messagingSenderId:"869948339462",
+appId:"1:869948339462:web:e45032398665e0c8d9da87"
+
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-let editID = null;
+let editID=null;
 
 
 
-
-
-// AUTO DATE & TIME
+// AUTO DATE TIME
 
 function setCurrentDateTime(){
 
-let dateBox = document.getElementById("date");
-let timeBox = document.getElementById("time");
+let dateBox=document.getElementById("date");
+let timeBox=document.getElementById("time");
 
 if(!dateBox || !timeBox) return;
 
-let now = new Date();
+let now=new Date();
 
-let today =
-now.toISOString().split("T")[0];
+dateBox.value=now.toISOString().split("T")[0];
+dateBox.max=dateBox.value;
 
-let hours =
-String(now.getHours()).padStart(2,'0');
-
-let minutes =
+timeBox.value=
+String(now.getHours()).padStart(2,'0')+
+":"+
 String(now.getMinutes()).padStart(2,'0');
-
-dateBox.value = today;
-dateBox.max = today;
-
-timeBox.value = hours+":"+minutes;
 
 }
 
@@ -78,65 +71,42 @@ setCurrentDateTime();
 
 // LOCATION
 
-window.getLocation = function(){
+window.getLocation=function(){
 
-let box =
-document.getElementById("location");
+let box=document.getElementById("location");
 
-box.value="Fetching location...";
+box.value="Fetching...";
 
 navigator.geolocation.getCurrentPosition(
 
 async function(position){
 
-let lat =
-position.coords.latitude.toFixed(5);
+let lat=position.coords.latitude.toFixed(5);
+let lon=position.coords.longitude.toFixed(5);
 
-let lon =
-position.coords.longitude.toFixed(5);
-
-try{
-
-let response =
-await fetch(
+let response=await fetch(
 "https://nominatim.openstreetmap.org/reverse?format=json&lat="
 +lat+"&lon="+lon
 );
 
-let data =
-await response.json();
+let data=await response.json();
 
-let place =
+let place=
 
-data.address.city ||
-data.address.town ||
-data.address.village ||
-data.address.state ||
+data.address.city||
+data.address.town||
+data.address.village||
+data.address.state||
 "Unknown";
 
-
-box.value =
-place+" ("+lat+","+lon+")";
-
-}
-catch{
-
-box.value=lat+","+lon;
-
-}
+box.value=place+" ("+lat+","+lon+")";
 
 },
 
 function(){
 
-box.value="Turn ON mobile location";
+box.value="Turn ON Location";
 
-},
-
-{
-enableHighAccuracy:false,
-timeout:7000,
-maximumAge:60000
 }
 
 );
@@ -149,9 +119,9 @@ maximumAge:60000
 
 async function compressImage(file){
 
-return new Promise((resolve)=>{
+return new Promise(resolve=>{
 
-let reader = new FileReader();
+let reader=new FileReader();
 
 reader.onload=function(e){
 
@@ -161,35 +131,24 @@ img.src=e.target.result;
 
 img.onload=function(){
 
-let canvas=
-document.createElement("canvas");
+let canvas=document.createElement("canvas");
 
 let maxWidth=800;
 
 let scale=maxWidth/img.width;
 
 canvas.width=maxWidth;
-
 canvas.height=img.height*scale;
 
-let ctx=
-canvas.getContext("2d");
+canvas.getContext("2d")
+.drawImage(img,0,0,
+canvas.width,canvas.height);
 
-ctx.drawImage(
-img,
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-canvas.toBlob(function(blob){
+canvas.toBlob(blob=>{
 
 resolve(blob);
 
-},
-"image/jpeg",
-0.7);
+},"image/jpeg",0.7);
 
 };
 
@@ -203,58 +162,37 @@ reader.readAsDataURL(file);
 
 
 
-// SAVE DATA
+// SAVE
 
-window.saveData = async function(){
+window.saveData=async function(){
 
 try{
 
-let enteredBy =
-document.getElementById("enteredBy")?.value.trim();
-
-let name =
-document.getElementById("name")?.value.trim();
-
-let designation =
-document.getElementById("designation")?.value.trim();
-
-let location =
-document.getElementById("location")?.value.trim();
-
-let date =
-document.getElementById("date")?.value;
-
-let time =
-document.getElementById("time")?.value;
-
-let followup =
-document.getElementById("followup")?.value.trim();
-
-let file =
-document.getElementById("photo")?.files[0];
+let enteredBy=document.getElementById("enteredBy")?.value.trim();
+let name=document.getElementById("name")?.value.trim();
+let designation=document.getElementById("designation")?.value.trim();
+let location=document.getElementById("location")?.value.trim();
+let date=document.getElementById("date")?.value;
+let time=document.getElementById("time")?.value;
+let followup=document.getElementById("followup")?.value.trim();
+let file=document.getElementById("photo")?.files[0];
 
 
-
-if(!enteredBy || !name || !designation ||
-!location || !date || !time ||
-!followup){
+if(!enteredBy||!name||!designation||
+!location||!date||!time||!followup){
 
 alert("Fill all fields");
-
 return;
 
 }
-
 
 
 if(!file && !editID){
 
-alert("Take inspection photo");
-
+alert("Take photo");
 return;
 
 }
-
 
 
 let photoURL="";
@@ -262,22 +200,17 @@ let photoURL="";
 
 if(file){
 
-let compressedFile =
-await compressImage(file);
+let compressed=await compressImage(file);
 
-let storageRef =
+let storageRef=
 ref(storage,"photos/"+Date.now()+".jpg");
 
-await uploadBytes(
-storageRef,
-compressedFile
-);
+await uploadBytes(storageRef,compressed);
 
-photoURL =
+photoURL=
 await getDownloadURL(storageRef);
 
 }
-
 
 
 /* UPDATE */
@@ -299,9 +232,7 @@ photoURL
 
 });
 
-alert("Updated Successfully");
-
-editID=null;
+alert("Updated");
 
 }
 
@@ -326,21 +257,17 @@ created:Date.now()
 
 });
 
-alert("Saved Successfully");
+alert("Saved");
 
 }
 
-
-/* RETURN HOME */
 
 window.location="index.html";
 
-
 }
-catch(error){
+catch(e){
 
-console.log(error);
-
+console.log(e);
 alert("Save Failed");
 
 }
@@ -349,29 +276,37 @@ alert("Save Failed");
 
 
 
-// LOAD DATA (HOME PAGE)
+// LOAD DASHBOARD
 
 async function loadData(){
 
-let records =
-document.getElementById("records");
+let records=document.getElementById("records");
 
 if(!records) return;
 
-records.innerHTML="Loading...";
 
-let querySnapshot =
-await getDocs(
-collection(db,"inspections")
-);
+let search=
+document.getElementById("searchBox")?.value.toLowerCase()||"";
 
-let dataArray=[];
+let fromDate=
+document.getElementById("fromDate")?.value;
+
+let toDate=
+document.getElementById("toDate")?.value;
+
+
+let querySnapshot=
+await getDocs(collection(db,"inspections"));
+
 
 let total=0;
 let todayCount=0;
 
-let todayDate =
+let today=
 new Date().toISOString().split("T")[0];
+
+
+records.innerHTML="";
 
 
 querySnapshot.forEach(docSnap=>{
@@ -379,40 +314,33 @@ querySnapshot.forEach(docSnap=>{
 let d=docSnap.data();
 let id=docSnap.id;
 
-let createdTime =
-d.created || 0;
 
 total++;
 
-if(d.date==todayDate){
-
+if(d.date==today)
 todayCount++;
 
-}
 
-dataArray.push({
+/* SEARCH FILTER */
 
-id:id,
-data:d,
-created:createdTime
+let matchSearch=
 
-});
-
-});
+d.name.toLowerCase().includes(search)||
+d.location.toLowerCase().includes(search);
 
 
-dataArray.sort((a,b)=>
-b.created-a.created
-);
+/* DATE FILTER */
+
+let matchDate=true;
+
+if(fromDate)
+matchDate=d.date>=fromDate;
+
+if(toDate)
+matchDate=d.date<=toDate;
 
 
-records.innerHTML="";
-
-
-dataArray.forEach(item=>{
-
-let d=item.data;
-let id=item.id;
+if(matchSearch && matchDate){
 
 records.innerHTML+=`
 
@@ -435,55 +363,38 @@ ${d.name}
 
 `;
 
+}
+
 });
 
 
-let totalBox =
-document.getElementById("totalCount");
-
-let todayBox =
-document.getElementById("todayCount");
-
-
-if(totalBox)
-totalBox.innerText=total;
-
-if(todayBox)
-todayBox.innerText=todayCount;
+document.getElementById("totalCount").innerText=total;
+document.getElementById("todayCount").innerText=todayCount;
 
 }
 
 
-// DELETE DATA + IMAGE
 
-window.deleteData = async function(id){
+// DELETE
 
-if(confirm("Delete inspection?")){
+window.deleteData=async function(id){
 
-let docSnap =
-await getDoc(
-doc(db,"inspections",id)
-);
+if(confirm("Delete?")){
 
-let data =
-docSnap.data();
+let docSnap=
+await getDoc(doc(db,"inspections",id));
 
-await deleteDoc(
-doc(db,"inspections",id)
-);
+let data=docSnap.data();
+
+await deleteDoc(doc(db,"inspections",id));
 
 
 if(data.photoURL){
-
-try{
 
 let imageRef=
 ref(storage,data.photoURL);
 
 await deleteObject(imageRef);
-
-}
-catch(e){}
 
 }
 
@@ -496,17 +407,14 @@ loadData();
 
 
 
-// EDIT MODE
+// EDIT
 
 async function loadEditData(id){
 
-let docSnap =
-await getDoc(
-doc(db,"inspections",id)
-);
+let docSnap=
+await getDoc(doc(db,"inspections",id));
 
-let d =
-docSnap.data();
+let d=docSnap.data();
 
 document.getElementById("enteredBy").value=d.enteredBy;
 document.getElementById("name").value=d.name;
@@ -519,25 +427,19 @@ document.getElementById("followup").value=d.followup;
 }
 
 
-// CHECK EDIT PAGE
 
-
-
+// VIEW PAGE
 
 async function loadViewData(id){
 
-let box =
-document.getElementById("viewData");
+let box=document.getElementById("viewData");
 
 if(!box) return;
 
-let docSnap =
-await getDoc(
-doc(db,"inspections",id)
-);
+let docSnap=
+await getDoc(doc(db,"inspections",id));
 
-let d =
-docSnap.data();
+let d=docSnap.data();
 
 box.innerHTML=`
 
@@ -553,10 +455,9 @@ box.innerHTML=`
 
 <p><b>Time:</b> ${d.time}</p>
 
-<p><b>Follow-up:</b><br>
-${d.followup}</p>
+<p><b>Follow-up:</b><br>${d.followup}</p>
 
-${d.photoURL ?
+${d.photoURL?
 `<img src="${d.photoURL}"
 style="width:100%;border-radius:8px">`
 :""}
@@ -568,64 +469,63 @@ onclick="window.location='inspection.html?id=${id}'">
 Edit
 </button>
 
-<button class="deleteBtn"
-onclick="deleteData('${id}')">
-Delete
-</button>
-
 `;
 
 }
 
 
 
-/* CHECK VIEW PAGE */
+// PAGE DETECTION
 
-const params =
+const params=
 new URLSearchParams(window.location.search);
 
-const viewID =
-params.get("id");
+const id=params.get("id");
 
-if(viewID){
 
-loadViewData(viewID);
+if(document.getElementById("records"))
+loadData();
+
+
+if(id && document.getElementById("enteredBy")){
+
+editID=id;
+loadEditData(id);
 
 }
 
-/* PAGE HANDLER */
 
-const urlParams =
-new URLSearchParams(window.location.search);
-
-const pageID =
-urlParams.get("id");
+if(id && document.getElementById("viewData"))
+loadViewData(id);
 
 
-/* LOAD DASHBOARD */
 
-if(document.getElementById("records")){
+// AUTO REFRESH
+
+setInterval(()=>{
+
+if(document.getElementById("records"))
+loadData();
+
+},10000);
+
+
+
+// FILTER FUNCTIONS
+
+window.filterData=function(){
 
 loadData();
 
 }
 
 
-/* EDIT PAGE */
+window.clearFilter=function(){
 
-if(pageID && document.getElementById("enteredBy")){
+document.getElementById("searchBox").value="";
+document.getElementById("fromDate").value="";
+document.getElementById("toDate").value="";
 
-editID = pageID;
-
-loadEditData(pageID);
-
-}
-
-
-/* VIEW PAGE */
-
-if(pageID && document.getElementById("viewData")){
-
-loadViewData(pageID);
+loadData();
 
 }

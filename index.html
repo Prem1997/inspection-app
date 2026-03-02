@@ -60,6 +60,29 @@ onclick="window.location='inspection.html'">
 </button>
 
 
+<div class="filterBox">
+
+<input id="searchBox"
+placeholder="Search Name / Location"
+onkeyup="filterData()">
+
+
+<label>From</label>
+<input type="date" id="fromDate"
+onchange="filterData()">
+
+
+<label>To</label>
+<input type="date" id="toDate"
+onchange="filterData()">
+
+
+<button onclick="clearFilter()">
+Clear
+</button>
+
+</div>
+
 
 <!-- RECORD LIST -->
 

@@ -322,3 +322,38 @@ color:#555;
 margin-top:3px;
 
 }
+
+/* Filter Box */
+
+.filterBox{
+
+background:white;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+box-shadow:0px 2px 6px #ccc;
+
+}
+
+.filterBox input{
+
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:5px;
+
+border-radius:6px;
+border:1px solid #ccc;
+
+}
+
+.filterBox button{
+
+background:#2563eb;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+width:100%;
+
+}
