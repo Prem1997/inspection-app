@@ -299,6 +299,30 @@ document.getElementById("toDate")?.value;
 let querySnapshot=
 await getDocs(collection(db,"inspections"));
 
+let docs = [];
+
+docs.forEach(item=>{
+
+let d=item.data;
+let id=item.id;
+
+docs.push({
+id:docSnap.id,
+data:docSnap.data()
+});
+
+});
+
+/* SORT NEWEST FIRST */
+
+docs.sort((a,b)=>
+
+(b.data.created || 0) -
+
+(a.data.created || 0)
+
+);
+
 
 let total=0;
 let todayCount=0;
